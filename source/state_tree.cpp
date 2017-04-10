@@ -17,12 +17,13 @@
 #include "state_tree.h"
 #include "game_state.h"
 
+using GameState = ngen::StateSystem::GameState;
+
 namespace ngen {
     namespace StateSystem {
         StateTree::StateTree()
         : m_activeState(nullptr)
         , m_pendingState(nullptr)
-        , m_stateList(nullptr)
         , m_systemList(nullptr)
         , m_systemCount(0)
         , m_stateCount(0)
@@ -85,6 +86,14 @@ namespace ngen {
                     pending->onEnter(rootState);
                 }
             }
+        }
+
+        //! \brief  Finds the GameState instance associated with the specified name.
+        //! \param  name [in] -
+        //!         The name of the game state to be retrieved.
+        //! \return Pointer to the game state associated with the specified name if one could not be found this method returns nullptr.
+        GameState* StateTree::findState(const char *name) {
+            return nullptr;
         }
 
         //! \brief Given two states within the state tree, this method determines which other state in the tree is

@@ -20,6 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include <cstddef>
+#include <vector>
+
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +37,8 @@ namespace ngen {
         //!
         //!
         class StateTree {
+            typedef std::vector<GameState*> StateList;
+
         public:
             StateTree();
             ~StateTree();
@@ -49,12 +53,14 @@ namespace ngen {
 
             void commitStateChange();
 
+            GameState* findState(const char *name);
+
             static GameState* findCommonAncestor(GameState *stateA, GameState *stateB);
 
         private:
             ngen::StateSystem::GameState *m_activeState;       // The currently active game state
             ngen::StateSystem::GameState *m_pendingState;      // The state currently waiting activation
-            GameState** m_stateList;        // List of game states
+            StateList m_stateList;          // Flat list of game states
 
             IGameSystem** m_systemList;     // All game systems in the state tree
 

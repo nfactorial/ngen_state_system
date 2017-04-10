@@ -46,7 +46,7 @@ namespace ngen {
         }
 
         //! \brief Invoked when the game state becomes active within the running title.
-        //! \oaram root [in] -
+        //! \param root [in] -
         //!        The game state at the root of the state switch, activation will not be passed up-to the root state.
         void GameState::onEnter(const GameState *root) {
             if (m_parent && m_parent != root) {
