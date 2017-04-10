@@ -21,6 +21,8 @@ using GameState = ngen::StateSystem::GameState;
 
 namespace ngen {
     namespace StateSystem {
+        static const size_t NGEN_MAXIMUM_STATE_CHANGES = 32;
+
         StateTree::StateTree()
         : m_activeState(nullptr)
         , m_pendingState(nullptr)
@@ -69,8 +71,16 @@ namespace ngen {
 
         //! \brief Switches control to the currently pending state.
         void StateTree::commitStateChange() {
-            if (m_pendingState) {
+            // Some states may request a state change as they become active, so we continually loop until the
+            // pending state remains null. However, if we encounter too many state changes we give up in-case
+            // the state tree has erroneously defined an infinitely recurring state change.
+
+            size_t changeCounter = 0;
+
+            while (m_pendingState && changeCounter < NGEN_MAXIMUM_STATE_CHANGES) {
                 GameState *pending = m_pendingState;
+
+                changeCounter++;
 
                 m_pendingState = nullptr;
 
