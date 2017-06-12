@@ -44,6 +44,7 @@ namespace ngen {
             void onUpdate(const ngen::UpdateArgs &updateArgs);
 
             GameState* getParent() const;
+            std::size_t getChildCount() const;
             std::size_t getUpdateCount() const;
             std::size_t getSystemCount() const;
 
@@ -51,9 +52,11 @@ namespace ngen {
 
         private:
             GameState*              m_parent;
+            GameState**             m_childList;
             ngen::IGameSystem**     m_systemList;
             ngen::IGameSystem**     m_updateList;
 
+            std::size_t             m_childCount;
             std::size_t             m_updateCount;
             std::size_t             m_systemCount;
         };
@@ -74,6 +77,12 @@ namespace ngen {
         //! \return The number of systems within the game state.
         inline std::size_t GameState::getSystemCount() const {
             return m_systemCount;
+        }
+
+        //! \brief Retrieves the number of child states within the game state.
+        //! \return The number of child states referenced by the game state.
+        inline std::size_t GameState::getChildCount() const {
+            return m_childCount;
         }
     }
 }

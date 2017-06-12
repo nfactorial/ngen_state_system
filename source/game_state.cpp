@@ -21,8 +21,10 @@ namespace ngen {
     namespace StateSystem {
         GameState::GameState()
         : m_parent(nullptr)
+        , m_childList(nullptr)
         , m_systemList(nullptr)
         , m_updateList(nullptr)
+        , m_childCount(0)
         , m_updateCount(0)
         , m_systemCount(0)
         {
@@ -37,12 +39,32 @@ namespace ngen {
         //! \param initArgs [in] -
         //!        Initialization information for use by the state tree.
         void GameState::onInitialize(const ngen::InitArgs &initArgs) {
-            // TODO: Invoke onInitialize for all contained system objects (in forward order)
+            // Invoke onInitialize for all contained system objects (in forward order)
+            for (std::size_t loop = 0; loop < m_systemCount; ++loop) {
+                m_systemList[loop]->onInitialize(initArgs);
+            }
+
+            // Invoke onInitialize for all child states
+            for (std::size_t loop = 0; loop < m_childCount; ++loop) {
+                m_childList[loop]->onInitialize(initArgs);
+            }
         }
 
         //! \brief Invoked when the game state is about to be removed from the running title.
         void GameState::onDestroy() {
-            // TODO: Invoke onDestroy for all contained system objects (in reverse order)
+            // Invoke onDestroy for all child states (in reverse order)
+            if (m_childCount) {
+                for (GameState **ptr = &m_childList[m_childCount]; ptr >= m_childList; --ptr) {
+                    (*ptr)->onDestroy();
+                }
+            }
+
+            // Invoke onDestroy for all contained system objects (in reverse order)
+            if (m_systemCount) {
+                for (IGameSystem **ptr = &m_systemList[m_systemCount - 1]; ptr >= m_systemList; --ptr) {
+                    (*ptr)->onDestroy();
+                }
+            }
         }
 
         //! \brief Invoked when the game state becomes active within the running title.
@@ -78,8 +100,8 @@ namespace ngen {
         //! \param updateArgs [in] -
         //!        Details about the current frame being processed.
         void GameState::onUpdate(const ngen::UpdateArgs &updateArgs) {
-            // TODO: As an optimisation, we may just include all parent systems in our own local list
-            // will help reduce cache misses. But for now, we'll pass the call up.
+            // TODO: As an optimisation, we may just include all parent systems in our own local list.
+            // This will help reduce cache misses. But for now, we'll pass the call up.
             if (m_parent) {
                 m_parent->onUpdate(updateArgs);
             }
@@ -98,11 +120,7 @@ namespace ngen {
                 return true;
             }
 
-            if (m_parent) {
-                return m_parent->checkParentHierarchy(state);
-            }
-
-            return false;
+            return m_parent != nullptr ? m_parent->checkParentHierarchy(state) : false;
         }
     }
 }

@@ -17,15 +17,16 @@
 #include "game_state.h"
 #include "gtest/gtest.h"
 
-TEST( GameState, Construction ) {
+TEST(GameState, Construction) {
     ngen::StateSystem::GameState gameState;
 
+    EXPECT_EQ(0, gameState.getChildCount());
     EXPECT_EQ(0, gameState.getSystemCount());
     EXPECT_EQ(0, gameState.getUpdateCount());
     EXPECT_EQ(nullptr, gameState.getParent());
 }
 
-TEST( GameState, checkParentHierarchy ) {
+TEST(GameState, checkParentHierarchy) {
     ngen::StateSystem::GameState gameState;
     ngen::StateSystem::GameState otherState;
 
@@ -34,17 +35,17 @@ TEST( GameState, checkParentHierarchy ) {
     EXPECT_FALSE(gameState.checkParentHierarchy(&otherState));
 }
 
-TEST( GameState, onEnter ) {
+TEST(GameState, onEnter) {
     ngen::StateSystem::GameState gameState;
 
 }
 
-TEST( GameState, onExit ) {
+TEST(GameState, onExit) {
     ngen::StateSystem::GameState gameState;
 
 }
 
-TEST( GameState, onUpdate ) {
+TEST(GameState, onUpdate) {
     ngen::StateSystem::GameState gameState;
 
 }
