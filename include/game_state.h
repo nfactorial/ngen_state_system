@@ -44,9 +44,9 @@ namespace ngen {
             void onUpdate(const ngen::UpdateArgs &updateArgs);
 
             GameState* getParent() const;
-            std::size_t getChildCount() const;
-            std::size_t getUpdateCount() const;
-            std::size_t getSystemCount() const;
+            size_t getChildCount() const;
+            size_t getUpdateCount() const;
+            size_t getSystemCount() const;
 
             bool checkParentHierarchy(const GameState *state) const;
 
@@ -56,9 +56,9 @@ namespace ngen {
             ngen::IGameSystem**     m_systemList;
             ngen::IGameSystem**     m_updateList;
 
-            std::size_t             m_childCount;
-            std::size_t             m_updateCount;
-            std::size_t             m_systemCount;
+            size_t             m_childCount;
+            size_t             m_updateCount;
+            size_t             m_systemCount;
         };
 
         //! \brief Retrieves the parent game state.
@@ -69,19 +69,19 @@ namespace ngen {
 
         //! \brief Retrieves the number of systems in the game state that are expecting an update.
         //! \return The number of systems within the game state that expect an update call.
-        inline std::size_t GameState::getUpdateCount() const {
+        inline size_t GameState::getUpdateCount() const {
             return m_updateCount;
         }
 
         //! \brief Retrieves the number of systems contained within the game state.
         //! \return The number of systems within the game state.
-        inline std::size_t GameState::getSystemCount() const {
+        inline size_t GameState::getSystemCount() const {
             return m_systemCount;
         }
 
         //! \brief Retrieves the number of child states within the game state.
         //! \return The number of child states referenced by the game state.
-        inline std::size_t GameState::getChildCount() const {
+        inline size_t GameState::getChildCount() const {
             return m_childCount;
         }
     }

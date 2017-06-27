@@ -40,12 +40,12 @@ namespace ngen {
         //!        Initialization information for use by the state tree.
         void GameState::onInitialize(const ngen::InitArgs &initArgs) {
             // Invoke onInitialize for all contained system objects (in forward order)
-            for (std::size_t loop = 0; loop < m_systemCount; ++loop) {
+            for (size_t loop = 0; loop < m_systemCount; ++loop) {
                 m_systemList[loop]->onInitialize(initArgs);
             }
 
             // Invoke onInitialize for all child states
-            for (std::size_t loop = 0; loop < m_childCount; ++loop) {
+            for (size_t loop = 0; loop < m_childCount; ++loop) {
                 m_childList[loop]->onInitialize(initArgs);
             }
         }
@@ -75,7 +75,7 @@ namespace ngen {
                 m_parent->onEnter(root);
             }
 
-            for (std::size_t loop = 0; loop < m_systemCount; ++loop) {
+            for (size_t loop = 0; loop < m_systemCount; ++loop) {
                 m_systemList[loop]->onActivate();
             }
         }
@@ -106,7 +106,7 @@ namespace ngen {
                 m_parent->onUpdate(updateArgs);
             }
 
-            for (std::size_t loop = 0; loop < m_updateCount; ++loop) {
+            for (size_t loop = 0; loop < m_updateCount; ++loop) {
                 m_updateList[loop]->onUpdate(updateArgs);
             }
         }

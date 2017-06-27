@@ -38,6 +38,7 @@ namespace ngen {
         //!
         class StateTree {
             typedef std::vector<GameState*> StateList;
+            typedef StateList::iterator StateIterator;
 
         public:
             StateTree();
@@ -48,8 +49,8 @@ namespace ngen {
 
             void onUpdate(const ngen::UpdateArgs &updateArgs);
 
-            std::size_t getSystemCount() const;
-            std::size_t getStateCount() const;
+            size_t getSystemCount() const;
+            size_t getStateCount() const;
 
             void commitStateChange();
 
@@ -64,20 +65,20 @@ namespace ngen {
 
             IGameSystem** m_systemList;     // All game systems in the state tree
 
-            std::size_t m_systemCount;      // Total number of game systems in the state tree
-            std::size_t m_stateCount;       // Number of individual game states
+            size_t m_defaultState;          // Game state to be used when the state tree is first initialized
+            size_t m_systemCount;           // Total number of game systems in the state tree
         };
 
         //! \brief Retrieves the total number of game systems that exist within the state tree.
         //! \return The total number of game systems in the state tree.
-        inline std::size_t StateTree::getSystemCount() const {
+        inline size_t StateTree::getSystemCount() const {
             return m_systemCount;
         }
 
         //! \brief Retrieves the number of game states within the state tree.
         //! \return The number of game states within the state tree.
-        inline std::size_t StateTree::getStateCount() const {
-            return m_stateCount;
+        inline size_t StateTree::getStateCount() const {
+            return m_stateList.size();
         }
     }
 }

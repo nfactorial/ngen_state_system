@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+#include <core/igame_system.h>
+
 #include "state_tree.h"
 #include "game_state.h"
 
@@ -27,22 +29,33 @@ namespace ngen {
         : m_activeState(nullptr)
         , m_pendingState(nullptr)
         , m_systemList(nullptr)
+        , m_defaultState(0)
         , m_systemCount(0)
-        , m_stateCount(0)
         {
             //
         }
 
         StateTree::~StateTree() {
-            //
+
+            for (size_t loop = 0; loop < m_systemCount; ++loop) {
+                // TODO: delete m_systemList[loop]
+            }
+
+            delete [] m_systemList;
         }
 
         //! \brief Invoked when the state tree is ready for use and game systems may be prepared for processing.
         //! \param initArgs [in] -
         //!        Initialization information for use by the state tree.
         void StateTree::onInitialize(const ngen::InitArgs &initArgs) {
-            // TODO: Invoke onInitialize for all game states
-            // TODO: Setup pending state for default game state
+            m_pendingState = m_stateList[m_defaultState];
+
+            // Invoke onInitialize for all root states, which will pass the call into their children for us.
+            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
+                if (!(*iterator)->getParent()) {
+                    (*iterator)->onInitialize(initArgs);
+                }
+            }
         }
 
         //! \brief Invoked when the game state is about to be removed from the running title.
@@ -53,8 +66,14 @@ namespace ngen {
                 m_activeState = nullptr;
             }
 
-            // TODO: Invoke onDestroy for all contained system objects (in reverse order)
+            // Invoke onDestroy for all root states, which will pass the call onto their children for us.
+            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
+                if (!(*iterator)->getParent()) {
+                    (*iterator)->onDestroy();
+                }
+            }
 
+            // We place this here to prevent someone erroneously preparing another state within the onDestroy process.
             m_pendingState = nullptr;
         }
 
@@ -67,6 +86,8 @@ namespace ngen {
             if (m_activeState) {
                 m_activeState->onUpdate(updateArgs);
             }
+
+            commitStateChange();
         }
 
         //! \brief Switches control to the currently pending state.
@@ -88,7 +109,7 @@ namespace ngen {
                     GameState *rootState = StateTree::findCommonAncestor(m_activeState, pending);
 
                     if (m_activeState) {
-                        // Invoke 'onDestroy' for all systems that are being terminated
+                        // Invoke 'onDeactivate' for all systems that are being terminated
                         m_activeState->onExit(rootState);
                     }
 
