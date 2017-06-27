@@ -40,21 +40,35 @@ blocks of memory for processing. The game system should not assume that it will 
 that the framework is preparing for execution. 
 
 When the title's execution moves into a state where the game system is considered active, the IGameSystem::onActivate
-method will be invoked. At this point the game system may c
+method will be invoked. At this point the game system may perform any final preparation before it begins processing,
+this typically takes the form of short term memory allocation, data initialization or event registration amongst other
+things.
 
 Whilst a game system is active within a title, its IGameSystem::onUpdate method will be invoked each frame,
 allowing the game system to perform any processing necessary.
 
-When the title's execution moves to a state where the game system is no-longer considered active, the
-IGameSystem::onDeactivate will be invoked. The game system object should take this opportunity to
+When the title's execution moves to a state where the game system will no-longer be considered active, the
+IGameSystem::onDeactivate will be invoked. The game system object should take this opportunity to reverse any setup
+it performed during the onActivate method.
 
-Finally, when the framework is being terminated and the state tree is being removed from memory, the
-IGameSystem::onDestroy method will be invoked.
+Finally, when the framework is being terminated and the state tree about to be removed from memory, the
+IGameSystem::onDestroy method will be invoked. Here the game system should free any resources allocated within its
+onInitialize method.
 
 The framework cannot move to the destruction phase until it has processed the deactivate phase. Thus an active
 game system will always have its IGameSystem::onDeactivate method invoked before its onDestroy method can be executed.
+Similarly, a game system cannot enter its update phase without its onActivate method being invoked. The lifetime can
+be illustrated with the following tree
 
-If a game system is not active, its onDeactivate method will not be invoked.
+    - onInitialize
+        - onActivate
+            - onUpdate
+        - onDeactivate
+    - onDestroy
+The framework guarantees that if a method in one column is invoked, its subsequent method will also be invoked at some
+point in the future. The framework does not guarantee that all columns will be visited. So it is not possible for a games
+system onInitialize method to be called without a subsequent call on onDestroy in the future. However it is possible for
+a systems onActivate to be invoked without a subsequent call to its onUpdate.
 
 Regardless of its active state, a game system will always have its onDestroy method invoked during termination of
 its parent state tree.
