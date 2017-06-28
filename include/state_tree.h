@@ -14,8 +14,8 @@
 // limitations under the License.
 //
 
-#ifndef NGEN_STATE_TREE_STATE_TREE_H
-#define NGEN_STATE_TREE_STATE_TREE_H
+#ifndef NGEN_STATE_SYSTEM_STATE_TREE_H
+#define NGEN_STATE_SYSTEM_STATE_TREE_H
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -89,4 +89,4 @@ namespace ngen {
 
 ////////////////////////////////////////////////////////////////////////////
 
-#endif //NGEN_STATE_TREE_STATE_TREE_H
+#endif //NGEN_STATE_SYSTEM_STATE_TREE_H
