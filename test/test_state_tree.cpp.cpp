@@ -39,24 +39,24 @@ TEST(StateTree, computeHash) {
     // unique codes for the strings listed.
     // If we do encounter a pair of string collisions, they may be added to this list and the hashing function
     // updated.
-    static const char* const kTestStrings[] = {
+    static const char* const kCollisionTestStrings[] = {
             "Testing",
             "ExampleA", "ExampleB", "ExampleC",
             "exampleA", "exampleB", "exampleC",
             "main", "main_state", "test_state"
     };
 
-    static const char* const kNullString = "";
-
-    const size_t kTestStringCount = sizeof(kTestStrings) / sizeof(kTestStrings[0]);
+    const size_t kTestStringCount = sizeof(kCollisionTestStrings) / sizeof(kCollisionTestStrings[0]);
 
     ngen::StateSystem::SystemHash hashValues[kTestStringCount];
 
     for (size_t loop = 0; loop < kTestStringCount; ++loop) {
-        hashValues[loop] = ngen::StateSystem::StateTree::computeHash(kTestStrings[loop]);
+        hashValues[loop] = ngen::StateSystem::StateTree::computeHash(kCollisionTestStrings[loop]);
     }
 
     // We should get 0 when we pass in a null pointer or an empty string
+    static const char* const kNullString = "";
+
     EXPECT_EQ(0, ngen::StateSystem::StateTree::computeHash(nullptr));
     EXPECT_EQ(0, ngen::StateSystem::StateTree::computeHash(kNullString));
 
