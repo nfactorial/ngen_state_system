@@ -46,6 +46,8 @@ TEST(StateTree, computeHash) {
             "main", "main_state", "test_state"
     };
 
+    static const char* const kNullString = "";
+
     const size_t kTestStringCount = sizeof(kTestStrings) / sizeof(kTestStrings[0]);
 
     ngen::StateSystem::SystemHash hashValues[kTestStringCount];
@@ -54,9 +56,14 @@ TEST(StateTree, computeHash) {
         hashValues[loop] = ngen::StateSystem::StateTree::computeHash(kTestStrings[loop]);
     }
 
-    // Ensure the strings did not collide
+    // We should get 0 when we pass in a null pointer or an empty string
+    EXPECT_EQ(0, ngen::StateSystem::StateTree::computeHash(nullptr));
+    EXPECT_EQ(0, ngen::StateSystem::StateTree::computeHash(kNullString));
+
+    // Ensure the strings did not collide and none should have evaluated to 0
     for (size_t hashIndex = 0; hashIndex < kTestStringCount; ++hashIndex) {
         for (size_t cmp = hashIndex + 1; cmp < kTestStringCount; ++cmp) {
+            EXPECT_NE(hashValues[hashIndex], 0);
             EXPECT_NE(hashValues[hashIndex], hashValues[cmp]);
         }
     }
