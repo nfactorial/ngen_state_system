@@ -71,4 +71,4 @@ system onInitialize method to be called without a subsequent call on onDestroy i
 a systems onActivate to be invoked without a subsequent call to its onUpdate.
 
 Regardless of its active state, a game system will always have its onDestroy method invoked during termination of
-its parent state tree.
+its parent state tree if its onInitialize method has also been invoked.
