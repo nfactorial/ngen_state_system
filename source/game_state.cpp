@@ -25,6 +25,7 @@ namespace ngen {
         , m_childList(nullptr)
         , m_systemList(nullptr)
         , m_updateList(nullptr)
+        , m_id(0)
         , m_childCount(0)
         , m_updateCount(0)
         , m_systemCount(0)

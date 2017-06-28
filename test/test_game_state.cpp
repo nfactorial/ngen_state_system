@@ -20,6 +20,7 @@
 TEST(GameState, Construction) {
     ngen::StateSystem::GameState gameState;
 
+    EXPECT_EQ(0, gameState.getId());
     EXPECT_EQ(0, gameState.getChildCount());
     EXPECT_EQ(0, gameState.getSystemCount());
     EXPECT_EQ(0, gameState.getUpdateCount());
