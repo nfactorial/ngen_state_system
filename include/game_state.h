@@ -1,3 +1,4 @@
+
 //
 // Copyright 2017 nfactorial
 //
@@ -21,6 +22,9 @@
 
 #include <cstddef>
 
+#include "state_tree.h"
+
+
 ////////////////////////////////////////////////////////////////////////////
 
 namespace ngen {
@@ -43,7 +47,11 @@ namespace ngen {
 
             void onUpdate(const ngen::UpdateArgs &updateArgs);
 
+            ngen::IGameSystem* getSystem(SystemHash hash) const;
+
             GameState* getParent() const;
+
+            SystemHash getId() const;
             size_t getChildCount() const;
             size_t getUpdateCount() const;
             size_t getSystemCount() const;
@@ -56,6 +64,7 @@ namespace ngen {
             ngen::IGameSystem**     m_systemList;
             ngen::IGameSystem**     m_updateList;
 
+            SystemHash         m_id;
             size_t             m_childCount;
             size_t             m_updateCount;
             size_t             m_systemCount;
@@ -65,6 +74,12 @@ namespace ngen {
         //! \return The parent GameState instance or nullptr if there is no parent.
         inline GameState* GameState::getParent() const {
             return m_parent;
+        }
+
+        //! \brief  Retrieves the unique identifier associated with the game state.
+        //! \return The identifier of the game state, this is typically a hash value generated from its name.
+        inline SystemHash GameState::getId() const {
+            return m_id;
         }
 
         //! \brief Retrieves the number of systems in the game state that are expecting an update.

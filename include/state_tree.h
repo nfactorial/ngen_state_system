@@ -19,9 +19,10 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-#include <cstddef>
+#include <cstdint>
 #include <vector>
 
+#include <core/system_hash.h>
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +33,8 @@ namespace ngen {
 
     namespace StateSystem {
         class GameState;
+
+        typedef uint64_t SystemHash;
 
         //! \brief Represents a tree hierarchy of game states that represent the structure of the running application.
         //!
@@ -56,6 +59,7 @@ namespace ngen {
 
             GameState* findState(const char *name);
 
+            static SystemHash computeHash(const char * const name);
             static GameState* findCommonAncestor(GameState *stateA, GameState *stateB);
 
         private:

@@ -15,6 +15,7 @@
 //
 
 #include <core/igame_system.h>
+#include <core/system_hash.h>
 #include <core/init_args.h>
 
 #include "state_tree.h"
@@ -127,6 +128,14 @@ namespace ngen {
         //!         The name of the game state to be retrieved.
         //! \return Pointer to the game state associated with the specified name if one could not be found this method returns nullptr.
         GameState* StateTree::findState(const char *name) {
+            SystemHash hash = StateTree::computeHash(name);
+
+            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
+                if ((*iterator)->getId() == hash) {
+                    return (*iterator);
+                }
+            }
+
             return nullptr;
         }
 
@@ -156,6 +165,14 @@ namespace ngen {
             }
 
             return nullptr;
+        }
+
+        //! \brief  Given a null terminated string, this method computes a hash value.
+        //! \param  name [in] -
+        //!         Null terminated string whose hash value is to be computed.
+        //! \return The hash value computed from the supplied string.
+        SystemHash StateTree::computeHash(const char * const name) {
+            return ngen::TSystemHash<SystemHash, 16777619>::compute(name);
         }
     }
 }

@@ -114,6 +114,18 @@ namespace ngen {
             }
         }
 
+        //! \brief  Retrieves the game system associated with the supplied hash value.
+        //! \param  hash [in] -
+        //!         The hashed value associated with the game system to be retrieved.
+        //! \return The IGameSystem instance associated with the supplied hash value or nullptr if one could not be found.
+        ngen::IGameSystem* GameState::getSystem(SystemHash hash) const {
+            for (size_t loop = 0; loop < m_systemCount; ++loop) {
+                // TODO: Compare instance name hash with supplied hash value
+            }
+
+            return m_parent ? m_parent->getSystem(hash) : nullptr;
+        }
+
         //! \brief Determines whether or not the specified state exists within our parent branch of the state tree.
         //! \param state [in] -
         //!        The state to be looked for within the parent hierarchy.
