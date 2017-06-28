@@ -45,7 +45,7 @@ namespace ngen {
             ~StateTree();
 
             void onDestroy();
-            void onInitialize(const ngen::InitArgs &initArgs);
+            void onInitialize(ngen::InitArgs &initArgs);
 
             void onUpdate(const ngen::UpdateArgs &updateArgs);
 

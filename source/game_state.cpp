@@ -15,6 +15,7 @@
 //
 
 #include <core/igame_system.h>
+#include <core/init_args.h>
 #include "game_state.h"
 
 namespace ngen {
@@ -38,7 +39,9 @@ namespace ngen {
         //! \brief Invoked when the state tree is ready for use and game systems may be prepared for processing.
         //! \param initArgs [in] -
         //!        Initialization information for use by the state tree.
-        void GameState::onInitialize(const ngen::InitArgs &initArgs) {
+        void GameState::onInitialize(ngen::InitArgs &initArgs) {
+            initArgs.gameState = this;
+
             // Invoke onInitialize for all contained system objects (in forward order)
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
                 m_systemList[loop]->onInitialize(initArgs);

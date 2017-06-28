@@ -20,8 +20,12 @@
 ////////////////////////////////////////////////////////////////////////////
 
 namespace ngen {
+    struct IUpdateArgs {
+        virtual bool requestState(const char *name) = 0;
+    };
+
     //! \brief Structure containing parameters and methods accessible during each frame update.
-    struct UpdateArgs {
+    struct UpdateArgs : public IUpdateArgs {
         float deltaTime;
     };
 }

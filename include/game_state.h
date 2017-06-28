@@ -36,7 +36,7 @@ namespace ngen {
             ~GameState();
 
             void onDestroy();
-            void onInitialize(const ngen::InitArgs &initArgs);
+            void onInitialize(ngen::InitArgs &initArgs);
 
             void onExit(const GameState *root);
             void onEnter(const GameState *root);

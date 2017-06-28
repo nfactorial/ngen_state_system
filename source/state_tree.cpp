@@ -15,6 +15,7 @@
 //
 
 #include <core/igame_system.h>
+#include <core/init_args.h>
 
 #include "state_tree.h"
 #include "game_state.h"
@@ -47,7 +48,9 @@ namespace ngen {
         //! \brief Invoked when the state tree is ready for use and game systems may be prepared for processing.
         //! \param initArgs [in] -
         //!        Initialization information for use by the state tree.
-        void StateTree::onInitialize(const ngen::InitArgs &initArgs) {
+        void StateTree::onInitialize(ngen::InitArgs &initArgs) {
+            initArgs.stateTree = this;
+
             m_pendingState = m_stateList[m_defaultState];
 
             // Invoke onInitialize for all root states, which will pass the call into their children for us.
