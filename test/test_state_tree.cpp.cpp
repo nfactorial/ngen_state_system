@@ -62,8 +62,9 @@ TEST(StateTree, computeHash) {
 
     // Ensure the strings did not collide and none should have evaluated to 0
     for (size_t hashIndex = 0; hashIndex < kTestStringCount; ++hashIndex) {
+        EXPECT_NE(hashValues[hashIndex], 0);
+
         for (size_t cmp = hashIndex + 1; cmp < kTestStringCount; ++cmp) {
-            EXPECT_NE(hashValues[hashIndex], 0);
             EXPECT_NE(hashValues[hashIndex], hashValues[cmp]);
         }
     }
