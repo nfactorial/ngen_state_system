@@ -55,9 +55,9 @@ namespace ngen {
             m_pendingState = m_stateList[m_defaultState];
 
             // Invoke onInitialize for all root states, which will pass the call into their children for us.
-            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
-                if (!(*iterator)->getParent()) {
-                    (*iterator)->onInitialize(initArgs);
+            for (auto state : m_stateList) {
+                if (!state->getParent()) {
+                    state->onInitialize(initArgs);
                 }
             }
         }
@@ -71,9 +71,9 @@ namespace ngen {
             }
 
             // Invoke onDestroy for all root states, which will pass the call onto their children for us.
-            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
-                if (!(*iterator)->getParent()) {
-                    (*iterator)->onDestroy();
+            for (auto state : m_stateList) {
+                if (!state->getParent()) {
+                    state->onDestroy();
                 }
             }
 
@@ -130,9 +130,9 @@ namespace ngen {
         GameState* StateTree::findState(const char *name) {
             SystemHash hash = StateTree::computeHash(name);
 
-            for (StateIterator iterator = m_stateList.begin(); iterator != m_stateList.end(); ++iterator) {
-                if ((*iterator)->getId() == hash) {
-                    return (*iterator);
+            for (auto state : m_stateList) {
+                if (state->getId() == hash) {
+                    return state;
                 }
             }
 
