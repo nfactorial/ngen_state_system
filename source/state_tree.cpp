@@ -14,8 +14,7 @@
 // limitations under the License.
 //
 
-#include <core/igame_system.h>
-#include <core/system_hash.h>
+#include <game_system/game_system.h>
 #include <core/init_args.h>
 
 #include "state_tree.h"
@@ -38,7 +37,6 @@ namespace ngen {
         }
 
         StateTree::~StateTree() {
-
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
                 // TODO: delete m_systemList[loop]
             }
@@ -89,6 +87,17 @@ namespace ngen {
 
             if (m_activeState) {
                 m_activeState->onUpdate(updateArgs);
+            }
+
+            commitStateChange();
+        }
+
+        //! \brief Called each frame after the main update phase has completed.
+        //! \param updateArgs [in] -
+        //!        Details about the current frame being processed.
+        void StateTree::onPostUpdate(const ngen::UpdateArgs &updateArgs) {
+            if (m_activeState) {
+                m_activeState->onPostUpdate(updateArgs);
             }
 
             commitStateChange();

@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include <core/igame_system.h>
+#include <game_system/game_system.h>
 #include <core/init_args.h>
 #include "game_state.h"
 
@@ -25,9 +25,11 @@ namespace ngen {
         , m_childList(nullptr)
         , m_systemList(nullptr)
         , m_updateList(nullptr)
+        , m_postUpdateList(nullptr)
         , m_id(0)
         , m_childCount(0)
         , m_updateCount(0)
+        , m_postUpdateCount(0)
         , m_systemCount(0)
         {
             //
@@ -45,7 +47,7 @@ namespace ngen {
 
             // Invoke onInitialize for all contained system objects (in forward order)
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
-                m_systemList[loop]->onInitialize(initArgs);
+                m_systemList[loop].gameSystem->onInitialize(initArgs);
             }
 
             // Invoke onInitialize for all child states
@@ -65,8 +67,8 @@ namespace ngen {
 
             // Invoke onDestroy for all contained system objects (in reverse order)
             if (m_systemCount) {
-                for (IGameSystem **ptr = &m_systemList[m_systemCount - 1]; ptr >= m_systemList; --ptr) {
-                    (*ptr)->onDestroy();
+                for (GameSystemInstance *ptr = &m_systemList[m_systemCount - 1]; ptr >= m_systemList; --ptr) {
+                    ptr->gameSystem->onDestroy();
                 }
             }
         }
@@ -80,7 +82,7 @@ namespace ngen {
             }
 
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
-                m_systemList[loop]->onActivate();
+                m_systemList[loop].gameSystem->onActivate();
             }
         }
 
@@ -90,8 +92,8 @@ namespace ngen {
         void GameState::onExit(const GameState *root) {
             if (m_systemCount) {
                 // Invoke onDeactivate for all contained system objects in reverse order
-                for (IGameSystem** ptr = &m_systemList[m_systemCount - 1]; ptr >= m_systemList; --ptr) {
-                    (*ptr)->onDeactivate();
+                for (GameSystemInstance* ptr = &m_systemList[m_systemCount - 1]; ptr >= m_systemList; --ptr) {
+                    ptr->gameSystem->onDeactivate();
                 }
             }
 
@@ -105,7 +107,7 @@ namespace ngen {
         //!        Details about the current frame being processed.
         void GameState::onUpdate(const ngen::UpdateArgs &updateArgs) {
             // TODO: As an optimisation, we may just include all parent systems in our own local list.
-            // This will help reduce cache misses. But for now, we'll pass the call up.
+            // TODO: This will help reduce cache misses. But for now, we'll pass the call up.
             if (m_parent) {
                 m_parent->onUpdate(updateArgs);
             }
@@ -115,13 +117,28 @@ namespace ngen {
             }
         }
 
+        //! \brief Called each frame once the main update phase has completed.
+        //! \param updateArgs [in] -
+        //!        Details about the current frame being processed.
+        void GameState::onPostUpdate(const ngen::UpdateArgs &updateArgs) {
+            if (m_parent) {
+                m_parent->onPostUpdate(updateArgs);
+            }
+
+            for (size_t loop = 0; loop < m_postUpdateCount; ++loop) {
+                m_postUpdateList[loop]->onPostUpdate(updateArgs);
+            }
+        }
+
         //! \brief  Retrieves the game system associated with the supplied hash value.
         //! \param  hash [in] -
         //!         The hashed value associated with the game system to be retrieved.
         //! \return The IGameSystem instance associated with the supplied hash value or nullptr if one could not be found.
-        ngen::IGameSystem* GameState::getSystem(SystemHash hash) const {
+        ngen::IGameSystem* GameState::getSystem(GameSystemHash::Type hash) const {
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
-                // TODO: Compare instance name hash with supplied hash value
+                if (m_systemList[loop].hash == hash) {
+                    return m_systemList[loop].gameSystem;
+                }
             }
 
             return m_parent ? m_parent->getSystem(hash) : nullptr;

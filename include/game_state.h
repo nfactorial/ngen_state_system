@@ -22,6 +22,7 @@
 
 #include <cstddef>
 
+#include "game_system/game_system_hash.h"
 #include "state_tree.h"
 
 
@@ -31,6 +32,8 @@ namespace ngen {
     struct InitArgs;
     struct UpdateArgs;
     struct IGameSystem;
+    struct IUpdateGameSystem;
+    struct IPostUpdateGameSystem;
 
     namespace StateSystem {
         //! \brief Represents a single state within the running titles state tree.
@@ -46,8 +49,9 @@ namespace ngen {
             void onEnter(const GameState *root);
 
             void onUpdate(const ngen::UpdateArgs &updateArgs);
+            void onPostUpdate(const ngen::UpdateArgs &updateArgs);
 
-            ngen::IGameSystem* getSystem(SystemHash hash) const;
+            ngen::IGameSystem* getSystem(GameSystemHash::Type hash) const;
 
             GameState* getParent() const;
 
@@ -59,14 +63,16 @@ namespace ngen {
             bool checkParentHierarchy(const GameState *state) const;
 
         private:
-            GameState*              m_parent;
-            GameState**             m_childList;
-            ngen::IGameSystem**     m_systemList;
-            ngen::IGameSystem**     m_updateList;
+            GameState*                      m_parent;
+            GameState**                     m_childList;
+            ngen::GameSystemInstance*       m_systemList;
+            ngen::IUpdateGameSystem**       m_updateList;
+            ngen::IPostUpdateGameSystem**   m_postUpdateList;
 
             SystemHash         m_id;
             size_t             m_childCount;
             size_t             m_updateCount;
+            size_t             m_postUpdateCount;
             size_t             m_systemCount;
         };
 

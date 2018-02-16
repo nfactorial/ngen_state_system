@@ -29,7 +29,7 @@
 namespace ngen {
     struct InitArgs;
     struct UpdateArgs;
-    struct IGameSystem;
+    struct GameSystemInstance;
 
     namespace StateSystem {
         class GameState;
@@ -38,7 +38,11 @@ namespace ngen {
 
         //! \brief Represents a tree hierarchy of game states that represent the structure of the running application.
         //!
-        //!
+        //! The state tree maintains the currently active game state, this must be a leaf node within the tree (ie. it
+        //! must not contain any child ndodes).
+        //! Control may switch to another leaf node using the changeState method. After a request is made, the change
+        //! is not immediate. Instead it is cached until the end of the frames processing, this means if multiple
+        //! state changes are requested within a single frame only the last issued state change will take effect.
         class StateTree {
             typedef std::vector<GameState*> StateList;
             typedef StateList::iterator StateIterator;
@@ -51,6 +55,7 @@ namespace ngen {
             void onInitialize(ngen::InitArgs &initArgs);
 
             void onUpdate(const ngen::UpdateArgs &updateArgs);
+            void onPostUpdate(const ngen::UpdateArgs &updateArgs);
 
             size_t getSystemCount() const;
             size_t getStateCount() const;
@@ -59,7 +64,7 @@ namespace ngen {
 
             GameState* findState(const char *name);
 
-            static SystemHash computeHash(const char * const name);
+            static SystemHash computeHash(const char *name);
             static GameState* findCommonAncestor(GameState *stateA, GameState *stateB);
 
         private:
@@ -67,7 +72,7 @@ namespace ngen {
             ngen::StateSystem::GameState *m_pendingState;      // The state currently waiting activation
             StateList m_stateList;          // Flat list of game states
 
-            IGameSystem** m_systemList;     // All game systems in the state tree
+            GameSystemInstance *m_systemList;   // All game systems in the state tree
 
             size_t m_defaultState;          // Game state to be used when the state tree is first initialized
             size_t m_systemCount;           // Total number of game systems in the state tree

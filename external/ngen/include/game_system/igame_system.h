@@ -21,7 +21,6 @@
 
 namespace ngen {
     struct InitArgs;
-    struct UpdateArgs;
 
     //! \brief Interface that defines the basic details of a game system that may be registered with the engine.
     //!
@@ -45,8 +44,6 @@ namespace ngen {
 
         virtual void onActivate() = 0;
         virtual void onDeactivate() = 0;
-
-        virtual void onUpdate(const UpdateArgs &updateArgs) = 0;
     };
 }
 
