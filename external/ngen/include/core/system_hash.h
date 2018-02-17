@@ -33,7 +33,7 @@ namespace ngen {
     public:
         typedef TType Type;
 
-        static inline TType compute(const char * const data) {
+        static inline TType compute(const char * const data) noexcept {
             TType hash = 0;
 
             if (data) {
