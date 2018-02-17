@@ -17,6 +17,14 @@ namespace ngen {
     struct IPostUpdateGameSystem;
 
     struct GameSystemInstance {
+        GameSystemInstance()
+        : hash(0)
+        , gameSystem(nullptr)
+        , updateSystem(nullptr)
+        , postUpdateSystem(nullptr)
+        , creator(nullptr)
+        {}
+
         ngen::GameSystemHash::Type hash;
         IGameSystem *gameSystem;
         IUpdateGameSystem *updateSystem;

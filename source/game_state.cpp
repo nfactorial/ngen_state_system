@@ -135,6 +135,7 @@ namespace ngen {
         //!         The hashed value associated with the game system to be retrieved.
         //! \return The IGameSystem instance associated with the supplied hash value or nullptr if one could not be found.
         ngen::IGameSystem* GameState::getSystem(GameSystemHash::Type hash) const {
+            // We're just performing a linear look-up, could be improved in the future but we're not performance critical
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
                 if (m_systemList[loop].hash == hash) {
                     return m_systemList[loop].gameSystem;

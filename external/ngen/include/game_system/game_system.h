@@ -10,6 +10,9 @@
 #include "game_system_instance.h"
 #include "ipost_update_game_system.h"
 
+#include "game_system_creator.h"
+#include "game_system_factory.h"
+
 ////////////////////////////////////////////////////////////////////////////
 
 #endif //ndef NGEN_CORE_GAME_SYSTEM_H

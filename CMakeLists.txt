@@ -15,7 +15,7 @@ include_directories(include)
 include_directories(SYSTEM external/ngen/include)
 
 set(SOURCE_FILES
-        source/game_state.cpp source/state_tree.cpp)
+        source/game_system_factory.cpp source/game_state.cpp source/state_tree.cpp)
 
 set(INCLUDE_FILES
         include/game_state.h include/state_tree.h)

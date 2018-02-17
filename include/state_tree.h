@@ -31,6 +31,8 @@ namespace ngen {
     struct UpdateArgs;
     struct GameSystemInstance;
 
+    class GameSystemFactory;
+
     namespace StateSystem {
         class GameState;
 
@@ -68,6 +70,8 @@ namespace ngen {
             static GameState* findCommonAncestor(GameState *stateA, GameState *stateB);
 
         private:
+            ngen::GameSystemFactory *m_systemFactory;
+
             ngen::StateSystem::GameState *m_activeState;       // The currently active game state
             ngen::StateSystem::GameState *m_pendingState;      // The state currently waiting activation
             StateList m_stateList;          // Flat list of game states

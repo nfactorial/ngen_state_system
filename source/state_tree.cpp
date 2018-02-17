@@ -27,7 +27,8 @@ namespace ngen {
         static const size_t NGEN_MAXIMUM_STATE_CHANGES = 32;
 
         StateTree::StateTree()
-        : m_activeState(nullptr)
+        : m_systemFactory(nullptr)
+        , m_activeState(nullptr)
         , m_pendingState(nullptr)
         , m_systemList(nullptr)
         , m_defaultState(0)
@@ -38,7 +39,7 @@ namespace ngen {
 
         StateTree::~StateTree() {
             for (size_t loop = 0; loop < m_systemCount; ++loop) {
-                // TODO: delete m_systemList[loop]
+                m_systemFactory->deleteInstance(m_systemList[loop]);
             }
 
             delete [] m_systemList;
@@ -112,6 +113,7 @@ namespace ngen {
             size_t changeCounter = 0;
 
             while (m_pendingState && changeCounter < NGEN_MAXIMUM_STATE_CHANGES) {
+                // Cache pending state, as it may be overwritten when we invoke onExit()
                 GameState *pending = m_pendingState;
 
                 changeCounter++;
